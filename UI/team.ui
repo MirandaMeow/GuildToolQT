@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GroupBox</class>
+ <widget class="QGroupBox" name="GroupBox">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>558</width>
+    <height>481</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>GroupBox</string>
+  </property>
+  <property name="title">
+   <string>刀型数据</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="QTableWidget" name="table_team">
+     <row>
+      <property name="text">
+       <string>名称</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>时间</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>队伍</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>队伍伤害</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>队伍韧性</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>队伍属性</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Boss 属性</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Boss 名称</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Boss 等级</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Boss 轮次</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Boss 均伤</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>伤害</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>剩余生命</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>是否尾刀</string>
+      </property>
+     </row>
+     <column>
+      <property name="text">
+       <string>第一刀</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>第二刀</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>第三刀</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

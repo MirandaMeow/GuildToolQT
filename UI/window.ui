@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QTabWidget" name="tab">
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="tab_overview">
+       <attribute name="title">
+        <string>出刀概览</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QGroupBox" name="groupBox">
+            <property name="title">
+             <string>GroupBox</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox_2">
+            <property name="title">
+             <string>GroupBox</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>统计数据</string>
+       </attribute>
+       <widget class="QGroupBox" name="groupBox_3">
+        <property name="geometry">
+         <rect>
+          <x>60</x>
+          <y>120</y>
+          <width>120</width>
+          <height>80</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>GroupBox</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_functions">
+    <property name="title">
+     <string>功能</string>
+    </property>
+    <addaction name="menu_change_session_api"/>
+    <addaction name="separator"/>
+    <addaction name="menu_flush"/>
+    <addaction name="menu_export"/>
+    <addaction name="menu_clear_icons"/>
+    <addaction name="separator"/>
+    <addaction name="menu_history"/>
+   </widget>
+   <widget class="QMenu" name="menu_infos">
+    <property name="title">
+     <string>信息</string>
+    </property>
+    <addaction name="menu_news"/>
+    <addaction name="menu_log"/>
+    <addaction name="menu_version"/>
+   </widget>
+   <addaction name="menu_functions"/>
+   <addaction name="menu_infos"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="menu_change_session_api">
+   <property name="text">
+    <string>更改公会识别码</string>
+   </property>
+  </action>
+  <action name="menu_flush">
+   <property name="text">
+    <string>刷新数据库</string>
+   </property>
+  </action>
+  <action name="menu_export">
+   <property name="text">
+    <string>导出数据到表格</string>
+   </property>
+  </action>
+  <action name="menu_clear_icons">
+   <property name="text">
+    <string>清空头像缓存</string>
+   </property>
+  </action>
+  <action name="menu_history">
+   <property name="text">
+    <string>历史记录</string>
+   </property>
+  </action>
+  <action name="menu_news">
+   <property name="text">
+    <string>更新记录</string>
+   </property>
+  </action>
+  <action name="menu_log">
+   <property name="text">
+    <string>运行日志</string>
+   </property>
+  </action>
+  <action name="menu_version">
+   <property name="text">
+    <string>关于</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
