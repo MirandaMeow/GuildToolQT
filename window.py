@@ -17,11 +17,9 @@ class Window(QMainWindow):
 
         self.__tab = QtWidgets.QTabWidget(self.__central_widget)
 
+        # 选项卡 - 出刀概览
         self.__tab_overview = QtWidgets.QWidget()
         self.__tab.addTab(self.__tab_overview, "出刀概览")
-
-        self.__tab_stats = QtWidgets.QWidget()
-        self.__tab.addTab(self.__tab_stats, "统计数据")
 
         self.__horizontal_layout_overview = QtWidgets.QHBoxLayout(self.__tab_overview)
         self.__layout_overview = QtWidgets.QVBoxLayout()
@@ -33,7 +31,30 @@ class Window(QMainWindow):
         self.__layout_overview.addWidget(self.__part_team)
 
         self.__horizontal_layout_overview.addLayout(self.__layout_overview)
+
+        # 选项卡 - 统计数据
+        self.__tab_stats = QtWidgets.QWidget()
+        self.__tab.addTab(self.__tab_stats, "统计数据")
+
+        self.__horizontal_layout_stats = QtWidgets.QHBoxLayout(self.__tab_stats)
+        self.__layout_stats = QtWidgets.QGridLayout()
+
+        self.__part_stats = Parts.Stats(self.__tab_stats)
+        self.__layout_stats.addWidget(self.__part_stats, 0, 0, 1, 1)
+
+        self.__part_summary = Parts.Summary(self.__tab_stats)
+        self.__layout_stats.addWidget(self.__part_summary, 0, 1, 1, 1)
+
+        self.__part_boss = Parts.Boss(self.__tab_stats)
+        self.__layout_stats.addWidget(self.__part_boss, 1, 0, 1, 2)
+        self.__layout_stats.setColumnStretch(0, 2)
+
+        self.__horizontal_layout_stats.addLayout(self.__layout_stats)
+
+        # 选项卡 - ？？？
+
         self.__horizontal_layout.addWidget(self.__tab)
+
         self.setCentralWidget(self.__central_widget)
 
         self.__menubar = QtWidgets.QMenuBar(self)
@@ -81,7 +102,6 @@ class Window(QMainWindow):
 
     def run(self):
         self.show()
-
 
 
 if __name__ == "__main__":

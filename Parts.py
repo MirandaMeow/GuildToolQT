@@ -14,6 +14,15 @@ _TEAM_TABLE_COLUMN = {
     "第二刀": 100,
     "第三刀": 100
 }
+_STAT_TABLE_COLUMN = {
+    "名称": 100,
+    "出刀数": 100,
+    "缺刀数": 100,
+    "总伤害": 100,
+    "日均伤害": 100,
+    "平均伤害": 100,
+    "总伤占比 %": 100
+}
 
 
 class Miss(QGroupBox):
@@ -54,8 +63,8 @@ class Miss(QGroupBox):
         _index = 0
         for column_name, width in _MISS_TABLE_COLUMN.items():
             column = QtWidgets.QTableWidgetItem()
-            self.__table_miss.setHorizontalHeaderItem(_index, column)
             column.setText(column_name)
+            self.__table_miss.setHorizontalHeaderItem(_index, column)
             self.__table_miss.setColumnWidth(_index, width)
             _index += 1
         self.__layout.addWidget(self.__table_miss, 1, 0, 1, 5)
@@ -86,7 +95,7 @@ class Miss(QGroupBox):
 
     def update_data(self, data):
         """
-        更新表中数据
+        更新控件中的数据
 
         :param data: 新的数据
         """
@@ -106,6 +115,7 @@ class Team(QGroupBox):
         self.setTitle("刀型数据")
         self.__horizontalLayout = QtWidgets.QHBoxLayout(self)
         self.__table_team = QtWidgets.QTableWidget(self)
+        self.__horizontalLayout.addWidget(self.__table_team)
         self.__table_team.setColumnCount(3)
         self.__table_team.setRowCount(14)
         self.__table_team.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
@@ -113,15 +123,15 @@ class Team(QGroupBox):
         for i in ["名称", "时间", "队伍", "队伍伤害", "队伍韧性", "队伍属性", "Boss 属性", "Boss 名称",
                   "Boss 等级", "Boss 轮次", "Boss 均伤", "伤害", "剩余生命", "是否尾刀"]:
             row = QtWidgets.QTableWidgetItem()
-            self.__table_team.setVerticalHeaderItem(_index, row)
             row.setText(i)
+            self.__table_team.setVerticalHeaderItem(_index, row)
             _index += 1
-        self.__horizontalLayout.addWidget(self.__table_team)
+
         _index = 0
         for column_name, width in _TEAM_TABLE_COLUMN.items():
             column = QtWidgets.QTableWidgetItem()
             column.setText(column_name)
-            self.__table_team.setVerticalHeaderItem(_index, column)
+            self.__table_team.setHorizontalHeaderItem(_index, column)
             self.__table_team.setColumnWidth(_index, width)
             _index += 1
 
@@ -133,9 +143,113 @@ class Team(QGroupBox):
 
     def update_data(self, data):
         """
-        更新表中数据
+        更新控件中的数据
 
         :param data: 新的数据
         """
         self.clear()
         ...
+
+
+class Stats(QGroupBox):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.setTitle("伤害统计")
+        self.__horizontal_layout = QtWidgets.QHBoxLayout(self)
+        self.__table_stats = QtWidgets.QTableWidget(self)
+        self.__horizontal_layout.addWidget(self.__table_stats)
+        self.__table_stats.setRowCount(30)
+        self.__table_stats.setColumnCount(7)
+        self.__table_stats.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+        _index = 0
+        for column_name, width in _STAT_TABLE_COLUMN.items():
+            column = QtWidgets.QTableWidgetItem()
+            column.setText(column_name)
+            self.__table_stats.setHorizontalHeaderItem(_index, column)
+            self.__table_stats.setColumnWidth(_index, width)
+            _index += 1
+
+    def clear(self):
+        """
+        清除表中数据
+        """
+        self.__table_stats.clearContents()
+
+    def update_data(self, data):
+        """
+        更新控件中的数据
+
+        :param data: 新的数据
+        """
+        self.clear()
+        ...
+
+
+class Boss(QGroupBox):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.setTitle("Boss 伤害统计")
+        self.__horizontal_layout = QtWidgets.QHBoxLayout(self)
+        self.__table_boss = QtWidgets.QTableWidget(self)
+        self.__horizontal_layout.addWidget(self.__table_boss)
+        self.__table_boss.setRowCount(30)
+        self.__table_boss.setColumnCount(9)
+        self.__table_boss.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+        _index = 0
+        column = QtWidgets.QTableWidgetItem()
+        column.setText("名称")
+        self.__table_boss.setHorizontalHeaderItem(0, column)
+        self.__table_boss.setColumnWidth(0, 100)
+        for i in range(1, 9, 2):
+            column = QtWidgets.QTableWidgetItem()
+            column.setText("boss")
+            self.__table_boss.setHorizontalHeaderItem(i, column)
+            self.__table_boss.setColumnWidth(i, 100)
+            column = QtWidgets.QTableWidgetItem()
+            column.setText("出刀数")
+            self.__table_boss.setHorizontalHeaderItem(i + 1, column)
+            self.__table_boss.setColumnWidth(i + 1, 60)
+
+    def clear(self):
+        """
+        清除表中数据
+        """
+        self.__table_boss.clearContents()
+
+    def update_data(self, data):
+        """
+        更新控件中的数据
+
+        :param data: 新的数据
+        """
+        self.clear()
+        ...
+
+
+class Summary(QGroupBox):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.setTitle("汇总统计")
+        self.__horizontal_layout = QtWidgets.QHBoxLayout(self)
+        self.__tree = QtWidgets.QTreeWidget(self)
+        self.__tree.setHeaderHidden(True)
+        self.__tree.setSortingEnabled(False)
+        self.__item_total_damage = QtWidgets.QTreeWidgetItem(self.__tree)
+        self.__item_total_damage.setText(0, "总伤害")
+        self.__item_attendance = QtWidgets.QTreeWidgetItem(self.__tree)
+        self.__item_attendance.setText(0, "总出勤")
+        self.__item_boss_damage = QtWidgets.QTreeWidgetItem(self.__tree)
+        self.__item_boss_damage.setText(0, "Boss 伤害")
+        self.__item_top_damage = QtWidgets.QTreeWidgetItem(self.__tree)
+        self.__item_top_damage.setText(0, "最高伤害榜")
+        self.__item_low_damage = QtWidgets.QTreeWidgetItem(self.__tree)
+        self.__item_low_damage.setText(0, "最低伤害榜")
+        self.__item_low_last_damage = QtWidgets.QTreeWidgetItem(self.__tree)
+        self.__item_low_last_damage.setText(0, "最低尾刀榜")
+        self.__item_leave_last_count = QtWidgets.QTreeWidgetItem(self.__tree)
+        self.__item_leave_last_count.setText(0, "留尾榜")
+        self.__item_last_count = QtWidgets.QTreeWidgetItem(self.__tree)
+        self.__item_last_count.setText(0, "收尾榜")
+        self.__item_total_miss = QtWidgets.QTreeWidgetItem(self.__tree)
+        self.__item_total_miss.setText(0, "缺刀榜")
+        self.__horizontal_layout.addWidget(self.__tree)

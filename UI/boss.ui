@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GroupBox</class>
+ <widget class="QGroupBox" name="GroupBox">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>665</width>
+    <height>409</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>GroupBox</string>
+  </property>
+  <property name="title">
+   <string>伤害统计</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="QTableWidget" name="table_boss">
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
+     <property name="rowCount">
+      <number>30</number>
+     </property>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <column>
+      <property name="text">
+       <string>名称</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>boss1</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>出刀数</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>boss2</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>出刀数</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>boss3</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>出刀数</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>boss4</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>出刀数</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
