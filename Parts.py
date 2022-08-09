@@ -1,4 +1,4 @@
-from PyQt6 import QtWidgets
+from PyQt6 import QtWidgets, QtCore
 from PyQt6.QtCore import QDate, Qt
 from PyQt6.QtWidgets import QGroupBox
 
@@ -24,6 +24,17 @@ _STAT_TABLE_COLUMN = {
     "总伤占比 %": 100
 }
 
+_BATTLE_REPORT_TABLE_COLUMN = {
+    "队伍": 100,
+    "玩家": 100,
+    "时间": 100,
+    "伤害": 100,
+    "Boss": 100,
+    "等级": 100,
+    "属性": 100,
+    "剩余生命": 100
+}
+
 
 class Miss(QGroupBox):
     def __init__(self, parent):
@@ -33,6 +44,7 @@ class Miss(QGroupBox):
         self.__horizontal_layout = QtWidgets.QHBoxLayout(self)
         self.__layout = QtWidgets.QGridLayout()
         self.__layout.setSpacing(11)
+        self.__horizontal_layout.addLayout(self.__layout)
 
         self.__label_date = QtWidgets.QLabel(self)
         self.__label_date.setText("日期选择：")
@@ -75,7 +87,6 @@ class Miss(QGroupBox):
         self.__layout.setColumnStretch(2, 10)
         self.__layout.setColumnStretch(3, 10)
         self.__layout.setColumnStretch(4, 50)
-        self.__horizontal_layout.addLayout(self.__layout)
 
     def clear(self):
         """
@@ -237,6 +248,7 @@ class Summary(QGroupBox):
         self.setTitle("汇总统计")
         self.__horizontal_layout = QtWidgets.QHBoxLayout(self)
         self.__tree = QtWidgets.QTreeWidget(self)
+        self.__horizontal_layout.addWidget(self.__tree)
         self.__tree.setHeaderHidden(True)
         self.__tree.setSortingEnabled(False)
         self.__item_total_damage = QtWidgets.QTreeWidgetItem(self.__tree)
@@ -257,4 +269,132 @@ class Summary(QGroupBox):
         self.__item_last_count.setText(0, "收尾榜")
         self.__item_total_miss = QtWidgets.QTreeWidgetItem(self.__tree)
         self.__item_total_miss.setText(0, "缺刀榜")
-        self.__horizontal_layout.addWidget(self.__tree)
+
+
+class QueryBattleReport(QGroupBox):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.setTitle("查询设置")
+
+        self.__horizontal_layout = QtWidgets.QHBoxLayout(self)
+        self.__layout = QtWidgets.QGridLayout()
+        self.__horizontal_layout.addLayout(self.__layout)
+
+        self.__label_date = QtWidgets.QLabel(self)
+        self.__label_date.setText("日期范围：")
+        self.__label_date.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
+        self.__layout.addWidget(self.__label_date, 0, 0, 1, 1)
+
+        self.__label_damage = QtWidgets.QLabel(self)
+        self.__label_damage.setText("伤害范围：")
+        self.__label_damage.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
+        self.__layout.addWidget(self.__label_damage, 1, 0, 1, 1)
+
+        self.__label_remain = QtWidgets.QLabel(self)
+        self.__label_remain.setText("剩余生命范围：")
+        self.__label_remain.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
+        self.__layout.addWidget(self.__label_remain, 2, 0, 1, 1)
+
+        self.__label_boss_level = QtWidgets.QLabel(self)
+        self.__label_boss_level.setText("Boss 等级：")
+        self.__label_boss_level.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
+        self.__layout.addWidget(self.__label_boss_level, 3, 0, 1, 1)
+
+        self.__label_boss_name = QtWidgets.QLabel(self)
+        self.__label_boss_name.setText("Boss 名称：")
+        self.__label_boss_name.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
+        self.__layout.addWidget(self.__label_boss_name, 4, 0, 1, 1)
+
+        self.__label_player = QtWidgets.QLabel(self)
+        self.__label_player.setText("玩家：")
+        self.__label_player.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
+        self.__layout.addWidget(self.__label_player, 5, 0, 1, 1)
+
+        self.__label_team = QtWidgets.QLabel(self)
+        self.__label_team.setText("队伍筛选：")
+        self.__label_team.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
+        self.__layout.addWidget(self.__label_team, 6, 0, 1, 1)
+
+        self.__label_result_0 = QtWidgets.QLabel(self)
+        self.__label_result_0.setText("查询结果：")
+        self.__label_result_0.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
+        self.__layout.addWidget(self.__label_result_0, 7, 0, 1, 1)
+
+        self.__label_result = QtWidgets.QLabel(self)
+        self.__label_result.setText("0/0")
+        self.__layout.addWidget(self.__label_result, 7, 1, 1, 1)
+
+        self.__date_start = QtWidgets.QDateEdit(self)
+        self.__date_start.setCalendarPopup(True)
+        self.__layout.addWidget(self.__date_start, 0, 1, 1, 1)
+
+        self.__date_end = QtWidgets.QDateEdit(self)
+        self.__date_end.setCalendarPopup(True)
+        self.__layout.addWidget(self.__date_end, 0, 2, 1, 1)
+
+        self.__line_damage_min = QtWidgets.QLineEdit(self)
+        self.__line_damage_min.setMaxLength(9)
+        self.__line_damage_min.setPlaceholderText("0")
+        self.__layout.addWidget(self.__line_damage_min, 1, 1, 1, 1)
+
+        self.__line_damage_max = QtWidgets.QLineEdit(self)
+        self.__line_damage_max.setMaxLength(9)
+        self.__line_damage_max.setPlaceholderText("99999999")
+        self.__layout.addWidget(self.__line_damage_max, 1, 2, 1, 1)
+
+        self.__line_remain_min = QtWidgets.QLineEdit(self)
+        self.__line_remain_min.setMaxLength(9)
+        self.__line_remain_min.setPlaceholderText("0")
+        self.__layout.addWidget(self.__line_remain_min, 2, 1, 1, 1)
+
+        self.__line_remain_max = QtWidgets.QLineEdit(self)
+        self.__line_remain_max.setMaxLength(9)
+        self.__line_remain_max.setPlaceholderText("999999999")
+        self.__layout.addWidget(self.__line_remain_max, 2, 2, 1, 1)
+
+        self.__line_level_min = QtWidgets.QLineEdit(self)
+        self.__line_level_min.setMaxLength(9)
+        self.__line_level_min.setPlaceholderText("0")
+        self.__layout.addWidget(self.__line_level_min, 3, 1, 1, 1)
+
+        self.__line_level_max = QtWidgets.QLineEdit(self)
+        self.__line_level_max.setMaxLength(9)
+        self.__line_level_max.setPlaceholderText("99")
+        self.__layout.addWidget(self.__line_level_max, 3, 2, 1, 1)
+
+        self.__combobox_boss = QtWidgets.QComboBox(self)
+        self.__layout.addWidget(self.__combobox_boss, 4, 1, 1, 1)
+
+        self.__combobox_player = QtWidgets.QComboBox(self)
+        self.__layout.addWidget(self.__combobox_player, 5, 1, 1, 1)
+
+        self.__button_team = QtWidgets.QPushButton(self)
+        self.__button_team.setText("队伍")
+        self.__layout.addWidget(self.__button_team, 6, 1, 1, 1)
+
+        self.__button_query = QtWidgets.QPushButton(self)
+        self.__button_query.setText("查询")
+        self.__layout.addWidget(self.__button_query, 6, 3, 1, 1)
+
+        self.__button_reset = QtWidgets.QPushButton(self)
+        self.__button_reset.setText("重置")
+        self.__layout.addWidget(self.__button_reset, 7, 3, 1, 1)
+
+
+class BattleReports(QGroupBox):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.setTitle("战斗记录")
+
+        self.__horizontal_layout = QtWidgets.QHBoxLayout(self)
+
+        self.__table_battle_reports = QtWidgets.QTableWidget(self)
+        self.__table_battle_reports.setRowCount(1350)
+        self.__table_battle_reports.setColumnCount(8)
+        self.__horizontal_layout.addWidget(self.__table_battle_reports)
+        _index = 0
+        for column_name, width in _BATTLE_REPORT_TABLE_COLUMN.items():
+            column = QtWidgets.QTableWidgetItem()
+            column.setText(column_name)
+            self.__table_battle_reports.setHorizontalHeaderItem(_index, column)
+            self.__table_battle_reports.setColumnWidth(_index, width)
