@@ -1,21 +1,27 @@
 import sys
 
-from PyQt6 import QtGui, QtWidgets
+from PyQt6 import QtWidgets, QtGui
 from PyQt6.QtWidgets import QMainWindow
 
 import Parts
+
+# TODO: 微调窗口大小
+_WINDOW_SIZE = {
+    0: [800, 500],
+    1: [800, 600]
+}
 
 
 class Window(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("会战统计工具")
-        self.resize(800, 600)
 
         self.__central_widget = QtWidgets.QWidget(self)
         self.__horizontal_layout = QtWidgets.QHBoxLayout(self.__central_widget)
 
         self.__tab = QtWidgets.QTabWidget(self.__central_widget)
+        self.__tab.tabBarClicked.connect(self.__signal_tab_changed)
 
         # 选项卡 - 出刀概览
         self.__tab_overview = QtWidgets.QWidget()
@@ -99,6 +105,9 @@ class Window(QMainWindow):
         self.__statusbar = QtWidgets.QStatusBar(self)
         self.setStatusBar(self.__statusbar)
         self.__statusbar.showMessage("就绪")
+
+    def __signal_tab_changed(self):
+        self.setFixedSize(*_WINDOW_SIZE[self.__tab.currentIndex()])
 
     def run(self):
         self.show()

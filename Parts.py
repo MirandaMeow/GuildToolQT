@@ -1,5 +1,5 @@
 from PyQt6 import QtWidgets
-from PyQt6.QtCore import QDate
+from PyQt6.QtCore import QDate, Qt
 from PyQt6.QtWidgets import QGroupBox
 
 _MISS_TABLE_COLUMN = {
@@ -40,6 +40,7 @@ class Miss(QGroupBox):
 
         self.__date = QtWidgets.QDateEdit(self)
         self.__date.setCalendarPopup(True)
+        self.__date.calendarWidget().setFirstDayOfWeek(Qt.DayOfWeek.Sunday)
         self.__date.setDisplayFormat("yyyy-MM-dd")
         self.__layout.addWidget(self.__date, 0, 1, 1, 1)
 
@@ -93,6 +94,7 @@ class Miss(QGroupBox):
         self.__date.setMinimumDate(QDate(int(min_date[0]), int(min_date[1]), int(min_date[2])))
         self.__date.setMaximumDate(QDate(int(max_date[0]), int(max_date[1]), int(max_date[2])))
 
+    # TODO: 添加更新控件的方法
     def update_data(self, data):
         """
         更新控件中的数据
@@ -141,6 +143,7 @@ class Team(QGroupBox):
         """
         self.__table_team.clearContents()
 
+    # TODO: 添加更新控件的方法
     def update_data(self, data):
         """
         更新控件中的数据
@@ -175,6 +178,7 @@ class Stats(QGroupBox):
         """
         self.__table_stats.clearContents()
 
+    # TODO: 添加更新控件的方法
     def update_data(self, data):
         """
         更新控件中的数据
@@ -216,6 +220,7 @@ class Boss(QGroupBox):
         """
         self.__table_boss.clearContents()
 
+    # TODO: 添加更新控件的方法
     def update_data(self, data):
         """
         更新控件中的数据
