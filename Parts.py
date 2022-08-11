@@ -2,6 +2,8 @@ from PyQt6 import QtWidgets, QtCore
 from PyQt6.QtCore import QDate, Qt
 from PyQt6.QtWidgets import QGroupBox
 
+import Charts
+
 _MISS_TABLE_COLUMN = {
     "名称": 140,
     "出刀数": 83,
@@ -389,6 +391,9 @@ class BattleReports(QGroupBox):
         self.__horizontal_layout = QtWidgets.QHBoxLayout(self)
 
         self.__table_battle_reports = QtWidgets.QTableWidget(self)
+        self.__table_battle_reports.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.__table_battle_reports.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
+        self.__table_battle_reports.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
         self.__table_battle_reports.setRowCount(1350)
         self.__table_battle_reports.setColumnCount(8)
         self.__horizontal_layout.addWidget(self.__table_battle_reports)
@@ -398,3 +403,118 @@ class BattleReports(QGroupBox):
             column.setText(column_name)
             self.__table_battle_reports.setHorizontalHeaderItem(_index, column)
             self.__table_battle_reports.setColumnWidth(_index, width)
+            _index += 1
+
+
+class BossRemain(QGroupBox):
+    def __init__(self, parent, name):
+        super().__init__(parent)
+        self.setTitle(name)
+        self.setFixedSize(380, 400)
+        self.__horizontal_layout = QtWidgets.QHBoxLayout(self)
+        self.__layout = QtWidgets.QVBoxLayout()
+        self.__horizontal_layout.addLayout(self.__layout)
+
+        # 第一个 Boss
+        self.__frame_boss1 = QtWidgets.QFrame(self)
+        self.__layout.addWidget(self.__frame_boss1)
+        self.__frame_boss1.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.__frame_boss1.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+
+        self.__horizontal_layout_boss1 = QtWidgets.QHBoxLayout(self.__frame_boss1)
+        self.__layout_boss1 = QtWidgets.QGridLayout()
+        self.__horizontal_layout_boss1.addLayout(self.__layout_boss1)
+
+        self.__label_boss1_name = QtWidgets.QLabel(self.__frame_boss1)
+        self.__label_boss1_name.setText("第 0 轮 Lv 99 喔喔怪")
+        self.__layout_boss1.addWidget(self.__label_boss1_name, 0, 0, 1, 1)
+
+        self.__label_boss1_elemental = QtWidgets.QLabel(self.__frame_boss1)
+        self.__label_boss1_elemental.setText("光属性")
+        self.__label_boss1_elemental.setAlignment(
+            QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
+        self.__layout_boss1.addWidget(self.__label_boss1_elemental, 0, 1, 1, 1)
+
+        self.__bar_boss1 = Charts.HPBar(self)
+        self.__layout_boss1.addWidget(self.__bar_boss1, 1, 0, 1, 2)
+
+        self.__layout_boss1.setRowStretch(0, 1)
+        self.__layout_boss1.setRowStretch(1, 3)
+
+        # 第二个 Boss
+        self.__frame_boss2 = QtWidgets.QFrame(self)
+        self.__layout.addWidget(self.__frame_boss2)
+        self.__frame_boss2.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.__frame_boss2.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+
+        self.__horizontal_layout_boss2 = QtWidgets.QHBoxLayout(self.__frame_boss2)
+        self.__layout_boss2 = QtWidgets.QGridLayout()
+        self.__horizontal_layout_boss2.addLayout(self.__layout_boss2)
+
+        self.__label_boss2_name = QtWidgets.QLabel(self.__frame_boss2)
+        self.__label_boss2_name.setText("第 0 轮 Lv 99 喔喔怪")
+        self.__layout_boss2.addWidget(self.__label_boss2_name, 0, 0, 1, 1)
+
+        self.__label_boss2_elemental = QtWidgets.QLabel(self.__frame_boss2)
+        self.__label_boss2_elemental.setText("光属性")
+        self.__label_boss2_elemental.setAlignment(
+            QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
+        self.__layout_boss2.addWidget(self.__label_boss2_elemental, 0, 1, 1, 1)
+
+        self.__bar_boss2 = Charts.HPBar(self)
+        self.__layout_boss2.addWidget(self.__bar_boss2, 1, 0, 1, 2)
+
+        self.__layout_boss2.setRowStretch(0, 1)
+        self.__layout_boss2.setRowStretch(1, 3)
+
+        # 第三个 Boss
+        self.__frame_boss3 = QtWidgets.QFrame(self)
+        self.__layout.addWidget(self.__frame_boss3)
+        self.__frame_boss3.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.__frame_boss3.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+
+        self.__horizontal_layout_boss3 = QtWidgets.QHBoxLayout(self.__frame_boss3)
+        self.__layout_boss3 = QtWidgets.QGridLayout()
+        self.__horizontal_layout_boss3.addLayout(self.__layout_boss3)
+
+        self.__label_boss3_name = QtWidgets.QLabel(self.__frame_boss3)
+        self.__label_boss3_name.setText("第 0 轮 Lv 99 喔喔怪")
+        self.__layout_boss3.addWidget(self.__label_boss3_name, 0, 0, 1, 1)
+
+        self.__label_boss3_elemental = QtWidgets.QLabel(self.__frame_boss3)
+        self.__label_boss3_elemental.setText("光属性")
+        self.__label_boss3_elemental.setAlignment(
+            QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignTrailing | QtCore.Qt.AlignmentFlag.AlignVCenter)
+        self.__layout_boss3.addWidget(self.__label_boss3_elemental, 0, 1, 1, 1)
+
+        self.__bar_boss3 = Charts.HPBar(self)
+        self.__layout_boss3.addWidget(self.__bar_boss3, 1, 0, 1, 2)
+
+        self.__layout_boss3.setRowStretch(0, 1)
+        self.__layout_boss3.setRowStretch(1, 3)
+
+        # 第四个 Boss
+        self.__frame_boss4 = QtWidgets.QFrame(self)
+        self.__layout.addWidget(self.__frame_boss4)
+        self.__frame_boss4.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.__frame_boss4.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+
+        self.__horizontal_layout_boss4 = QtWidgets.QHBoxLayout(self.__frame_boss4)
+        self.__layout_boss4 = QtWidgets.QGridLayout()
+        self.__horizontal_layout_boss4.addLayout(self.__layout_boss4)
+
+        self.__label_boss4_name = QtWidgets.QLabel(self.__frame_boss4)
+        self.__label_boss4_name.setText("第 0 轮 Lv 99 喔喔怪")
+        self.__layout_boss4.addWidget(self.__label_boss4_name, 0, 0, 1, 1)
+
+        self.__label_boss4_elemental = QtWidgets.QLabel(self.__frame_boss4)
+        self.__label_boss4_elemental.setText("光属性")
+        self.__label_boss4_elemental.setAlignment(
+            QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignTrailing | QtCore.Qt.AlignmentFlag.AlignVCenter)
+        self.__layout_boss4.addWidget(self.__label_boss4_elemental, 0, 1, 1, 1)
+
+        self.__bar_boss4 = Charts.HPBar(self)
+        self.__layout_boss4.addWidget(self.__bar_boss4, 1, 0, 1, 2)
+
+        self.__layout_boss4.setRowStretch(0, 1)
+        self.__layout_boss4.setRowStretch(1, 3)
