@@ -37,6 +37,13 @@ _BATTLE_REPORT_TABLE_COLUMN = {
     "剩余生命": 100
 }
 
+_BATTLE_DETAIL_TABLE_COLUMN = {
+    "队伍": 100,
+    "面板秒伤": 100,
+    "面板韧性": 100,
+    "面板回血": 100,
+}
+
 
 class Miss(QGroupBox):
     def __init__(self, parent):
@@ -328,10 +335,14 @@ class QueryBattleReport(QGroupBox):
 
         self.__date_start = QtWidgets.QDateEdit(self)
         self.__date_start.setCalendarPopup(True)
+        self.__date_start.calendarWidget().setFirstDayOfWeek(Qt.DayOfWeek.Sunday)
+        self.__date_start.setDisplayFormat("yyyy-MM-dd")
         self.__layout.addWidget(self.__date_start, 0, 1, 1, 1)
 
         self.__date_end = QtWidgets.QDateEdit(self)
         self.__date_end.setCalendarPopup(True)
+        self.__date_end.calendarWidget().setFirstDayOfWeek(Qt.DayOfWeek.Sunday)
+        self.__date_end.setDisplayFormat("yyyy-MM-dd")
         self.__layout.addWidget(self.__date_end, 0, 2, 1, 1)
 
         self.__line_damage_min = QtWidgets.QLineEdit(self)
@@ -387,6 +398,7 @@ class BattleReports(QGroupBox):
     def __init__(self, parent):
         super().__init__(parent)
         self.setTitle("战斗记录")
+        # self.setFixedHeight(480)
 
         self.__horizontal_layout = QtWidgets.QHBoxLayout(self)
 
@@ -410,7 +422,7 @@ class BossRemain(QGroupBox):
     def __init__(self, parent, name):
         super().__init__(parent)
         self.setTitle(name)
-        self.setFixedSize(380, 400)
+        self.setFixedSize(380, 394)
         self.__horizontal_layout = QtWidgets.QHBoxLayout(self)
         self.__layout = QtWidgets.QVBoxLayout()
         self.__horizontal_layout.addLayout(self.__layout)
@@ -518,3 +530,45 @@ class BossRemain(QGroupBox):
 
         self.__layout_boss4.setRowStretch(0, 1)
         self.__layout_boss4.setRowStretch(1, 3)
+        # self.__bar_boss4.clear()
+
+
+class BattleDetail(QGroupBox):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.setTitle("战斗数据细节")
+        self.setFixedWidth(442)
+
+        self.__horizontal_layout = QtWidgets.QHBoxLayout(self)
+        self.__layout = QtWidgets.QVBoxLayout()
+        self.__layout.setSpacing(11)
+        self.__horizontal_layout.addLayout(self.__layout)
+
+        self.__tree = QtWidgets.QTreeWidget(self)
+        self.__tree.setFixedHeight(93)
+        self.__layout.addWidget(self.__tree)
+        self.__tree.setHeaderHidden(True)
+
+        self.__item_player = QtWidgets.QTreeWidgetItem(self.__tree)
+        self.__item_player.setText(0, "玩家")
+        self.__item_time = QtWidgets.QTreeWidgetItem(self.__tree)
+        self.__item_time.setText(0, "时间")
+        self.__item_boss = QtWidgets.QTreeWidgetItem(self.__tree)
+        self.__item_boss.setText(0, "Boss")
+        self.__item_boss_remain = QtWidgets.QTreeWidgetItem(self.__tree)
+        self.__item_boss_remain.setText(0, "Boss 剩余生命")
+        self.__item_damage = QtWidgets.QTreeWidgetItem(self.__tree)
+        self.__item_damage.setText(0, "伤害")
+
+        self.__table = QtWidgets.QTableWidget(self)
+        self.__table.setFixedHeight(146)
+        self.__layout.addWidget(self.__table)
+        self.__table.setColumnCount(4)
+        self.__table.setRowCount(4)
+        _index = 0
+        for column_name, width in _BATTLE_DETAIL_TABLE_COLUMN.items():
+            column = QtWidgets.QTableWidgetItem()
+            column.setText(column_name)
+            self.__table.setHorizontalHeaderItem(_index, column)
+            self.__table.setColumnWidth(_index, width)
+            _index += 1

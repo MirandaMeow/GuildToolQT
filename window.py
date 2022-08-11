@@ -9,7 +9,7 @@ import Parts
 _WINDOW_SIZE = {
     0: [800, 500],
     1: [1200, 900],
-    2: [1200, 911]
+    2: [1310, 900]
 }
 
 
@@ -68,16 +68,23 @@ class Window(QMainWindow):
         self.__horizontal_layout_battle_reports.addLayout(self.__layout_battle_reports)
 
         self.__part_battle_reports = Parts.BattleReports(self)
-        self.__layout_battle_reports.addWidget(self.__part_battle_reports, 0, 0, 2, 1)
+        self.__layout_battle_reports.addWidget(self.__part_battle_reports, 0, 0, 2, 2)
+
+        self.__part_boss_hp_select = Parts.BossRemain(self, "Boss 生命 - 选中的")
+        self.__layout_battle_reports.addWidget(self.__part_boss_hp_select, 0, 2, 1, 1)
+
+        self.__part_boss_hp_now = Parts.BossRemain(self, "Boss 生命 - 当前")
+        self.__layout_battle_reports.addWidget(self.__part_boss_hp_now, 1, 2, 2, 1)
 
         self.__part_query_battle_report = Parts.QueryBattleReport(self)
         self.__layout_battle_reports.addWidget(self.__part_query_battle_report, 2, 0, 1, 1)
 
-        self.__part_boss_hp_select = Parts.BossRemain(self, "Boss 生命 - 选中的")
-        self.__layout_battle_reports.addWidget(self.__part_boss_hp_select, 0, 1, 1, 1)
+        self.__part_battle_detail = Parts.BattleDetail(self)
+        self.__layout_battle_reports.addWidget(self.__part_battle_detail, 2, 1, 1, 1)
 
-        self.__part_boss_hp_now = Parts.BossRemain(self, "Boss 生命 - 当前")
-        self.__layout_battle_reports.addWidget(self.__part_boss_hp_now, 1, 1, 2, 1)
+        self.__layout_battle_reports.setRowStretch(0, 3)
+        self.__layout_battle_reports.setRowStretch(1, 1)
+        self.__layout_battle_reports.setRowStretch(2, 1)
 
         # 菜单栏
         self.__menubar = QtWidgets.QMenuBar(self)

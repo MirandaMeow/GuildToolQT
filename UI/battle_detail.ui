@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GroupBox</class>
+ <widget class="QGroupBox" name="GroupBox">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>569</width>
+    <height>379</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>GroupBox</string>
+  </property>
+  <property name="title">
+   <string>战斗数据细节</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QTreeWidget" name="tree">
+       <property name="headerHidden">
+        <bool>true</bool>
+       </property>
+       <column>
+        <property name="text">
+         <string>1</string>
+        </property>
+       </column>
+       <item>
+        <property name="text">
+         <string>玩家</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>时间</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Boss</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Boss 剩余生命</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>伤害</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTableWidget" name="table">
+       <property name="rowCount">
+        <number>4</number>
+       </property>
+       <row/>
+       <row/>
+       <row/>
+       <row/>
+       <column>
+        <property name="text">
+         <string>队伍</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>面板秒伤</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>面板韧性</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>面板回血</string>
+        </property>
+       </column>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
