@@ -43,6 +43,23 @@ _BATTLE_DETAIL_TABLE_COLUMN = {
     "面板韧性": 100,
     "面板回血": 100,
 }
+_MEMBER_BATTLE_REPORTS_TABLE_COLUMN = {
+    "时间": 100,
+    "伤害": 100,
+    "Boss": 100,
+    "属性": 100,
+    "Boss 剩余生命": 100,
+}
+
+
+def _init_table(table: QtWidgets.QTableWidget, columns: dict):
+    _index = 0
+    for column_name, width in columns.items():
+        column = QtWidgets.QTableWidgetItem()
+        column.setText(column_name)
+        table.setHorizontalHeaderItem(_index, column)
+        table.setColumnWidth(_index, width)
+        _index += 1
 
 
 class Miss(QGroupBox):
@@ -82,13 +99,7 @@ class Miss(QGroupBox):
         self.__table_miss.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
         self.__table_miss.setRowCount(30)
         self.__table_miss.setColumnCount(5)
-        _index = 0
-        for column_name, width in _MISS_TABLE_COLUMN.items():
-            column = QtWidgets.QTableWidgetItem()
-            column.setText(column_name)
-            self.__table_miss.setHorizontalHeaderItem(_index, column)
-            self.__table_miss.setColumnWidth(_index, width)
-            _index += 1
+        _init_table(self.__table_miss, _MISS_TABLE_COLUMN)
         self.__layout.addWidget(self.__table_miss, 1, 0, 1, 5)
 
         self.__layout.setColumnStretch(0, 10)
@@ -148,14 +159,7 @@ class Team(QGroupBox):
             row.setText(i)
             self.__table_team.setVerticalHeaderItem(_index, row)
             _index += 1
-
-        _index = 0
-        for column_name, width in _TEAM_TABLE_COLUMN.items():
-            column = QtWidgets.QTableWidgetItem()
-            column.setText(column_name)
-            self.__table_team.setHorizontalHeaderItem(_index, column)
-            self.__table_team.setColumnWidth(_index, width)
-            _index += 1
+        _init_table(self.__table_team, _TEAM_TABLE_COLUMN)
 
     def clear(self):
         """
@@ -184,13 +188,7 @@ class Stats(QGroupBox):
         self.__table_stats.setRowCount(30)
         self.__table_stats.setColumnCount(7)
         self.__table_stats.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-        _index = 0
-        for column_name, width in _STAT_TABLE_COLUMN.items():
-            column = QtWidgets.QTableWidgetItem()
-            column.setText(column_name)
-            self.__table_stats.setHorizontalHeaderItem(_index, column)
-            self.__table_stats.setColumnWidth(_index, width)
-            _index += 1
+        _init_table(self.__table_stats, _STAT_TABLE_COLUMN)
 
     def clear(self):
         """
@@ -409,13 +407,7 @@ class BattleReports(QGroupBox):
         self.__table_battle_reports.setRowCount(1350)
         self.__table_battle_reports.setColumnCount(8)
         self.__horizontal_layout.addWidget(self.__table_battle_reports)
-        _index = 0
-        for column_name, width in _BATTLE_REPORT_TABLE_COLUMN.items():
-            column = QtWidgets.QTableWidgetItem()
-            column.setText(column_name)
-            self.__table_battle_reports.setHorizontalHeaderItem(_index, column)
-            self.__table_battle_reports.setColumnWidth(_index, width)
-            _index += 1
+        _init_table(self.__table_battle_reports, _BATTLE_REPORT_TABLE_COLUMN)
 
 
 class BossRemain(QGroupBox):
@@ -544,31 +536,91 @@ class BattleDetail(QGroupBox):
         self.__layout.setSpacing(11)
         self.__horizontal_layout.addLayout(self.__layout)
 
-        self.__tree = QtWidgets.QTreeWidget(self)
-        self.__tree.setFixedHeight(93)
-        self.__layout.addWidget(self.__tree)
-        self.__tree.setHeaderHidden(True)
+        self.__tree_detail = QtWidgets.QTreeWidget(self)
+        self.__tree_detail.setFixedHeight(93)
+        self.__layout.addWidget(self.__tree_detail)
+        self.__tree_detail.setHeaderHidden(True)
 
-        self.__item_player = QtWidgets.QTreeWidgetItem(self.__tree)
+        self.__item_player = QtWidgets.QTreeWidgetItem(self.__tree_detail)
         self.__item_player.setText(0, "玩家")
-        self.__item_time = QtWidgets.QTreeWidgetItem(self.__tree)
+        self.__item_time = QtWidgets.QTreeWidgetItem(self.__tree_detail)
         self.__item_time.setText(0, "时间")
-        self.__item_boss = QtWidgets.QTreeWidgetItem(self.__tree)
+        self.__item_boss = QtWidgets.QTreeWidgetItem(self.__tree_detail)
         self.__item_boss.setText(0, "Boss")
-        self.__item_boss_remain = QtWidgets.QTreeWidgetItem(self.__tree)
+        self.__item_boss_remain = QtWidgets.QTreeWidgetItem(self.__tree_detail)
         self.__item_boss_remain.setText(0, "Boss 剩余生命")
-        self.__item_damage = QtWidgets.QTreeWidgetItem(self.__tree)
+        self.__item_damage = QtWidgets.QTreeWidgetItem(self.__tree_detail)
         self.__item_damage.setText(0, "伤害")
 
-        self.__table = QtWidgets.QTableWidget(self)
-        self.__table.setFixedHeight(146)
-        self.__layout.addWidget(self.__table)
-        self.__table.setColumnCount(4)
-        self.__table.setRowCount(4)
-        _index = 0
-        for column_name, width in _BATTLE_DETAIL_TABLE_COLUMN.items():
-            column = QtWidgets.QTableWidgetItem()
-            column.setText(column_name)
-            self.__table.setHorizontalHeaderItem(_index, column)
-            self.__table.setColumnWidth(_index, width)
-            _index += 1
+        self.__table_detail = QtWidgets.QTableWidget(self)
+        self.__table_detail.setFixedHeight(146)
+        self.__table_detail.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.__layout.addWidget(self.__table_detail)
+        self.__table_detail.setColumnCount(4)
+        self.__table_detail.setRowCount(4)
+        _init_table(self.__table_detail, _BATTLE_DETAIL_TABLE_COLUMN)
+
+    class MemberDetail(QGroupBox):
+        def __init__(self, parent):
+            super().__init__(parent)
+            self.setTitle("成员概览")
+
+            self.__horizontal_layout = QtWidgets.QHBoxLayout(self)
+            self.__layout = QtWidgets.QVBoxLayout()
+            self.__horizontal_layout.addLayout(self.__layout)
+
+            self.__grid_layout = QtWidgets.QGridLayout()
+            self.__layout.addLayout(self.__grid_layout)
+
+            self.__label_player = QtWidgets.QLabel(self)
+            self.__label_player.setText("玩家：")
+            self.__grid_layout.addWidget(self.__label_player, 0, 0, 1, 1)
+
+            self.__combobox_player = QtWidgets.QComboBox(self)
+            self.__grid_layout.addWidget(self.__combobox_player, 0, 1, 1, 1)
+
+            self.__label_attack_detail_show = QtWidgets.QLabel(self)
+            self.__label_attack_detail_show.setText("出刀/缺刀/尾刀：")
+            self.__grid_layout.addWidget(self.__label_attack_detail_show, 0, 2, 1, 1)
+
+            self.__label_attack_detail = QtWidgets.QLabel(self)
+            self.__label_attack_detail.setText("42/0/5")
+            self.__grid_layout.addWidget(self.__label_attack_detail, 0, 3, 1, 1)
+
+            self.label_2 = QtWidgets.QLabel(self)
+            self.label_2.setText("总伤：")
+            self.__grid_layout.addWidget(self.label_2, 1, 0, 1, 1)
+
+            self.label_4 = QtWidgets.QLabel(self)
+            self.label_4.setNum(0)
+            self.__grid_layout.addWidget(self.label_4, 1, 1, 1, 1)
+
+            self.label_8 = QtWidgets.QLabel(self)
+            self.label_8.setText("除首日总伤：")
+            self.__grid_layout.addWidget(self.label_8, 1, 2, 1, 1)
+
+            self.label_6 = QtWidgets.QLabel(self)
+            self.label_6.setText("0")
+            self.__grid_layout.addWidget(self.label_6, 1, 3, 1, 1)
+
+            self.label_3 = QtWidgets.QLabel(self)
+            self.label_3.setText("均伤：")
+            self.__grid_layout.addWidget(self.label_3, 2, 0, 1, 1)
+
+            self.label_5 = QtWidgets.QLabel(self)
+            self.label_5.setText("0")
+            self.__grid_layout.addWidget(self.label_5, 2, 1, 1, 1)
+
+            self.label_9 = QtWidgets.QLabel(self)
+            self.label_9.setText("除首日均伤：")
+            self.__grid_layout.addWidget(self.label_9, 2, 2, 1, 1)
+
+            self.label_7 = QtWidgets.QLabel(self)
+            self.label_7.setText("0")
+            self.__grid_layout.addWidget(self.label_7, 2, 3, 1, 1)
+
+            self.__table_battle_reports = QtWidgets.QTableWidget(self)
+            self.__layout.addWidget(self.__table_battle_reports)
+            self.__table_battle_reports.setColumnCount(5)
+            self.__table_battle_reports.setRowCount(0)
+            _init_table(self.__table_battle_reports, _MEMBER_BATTLE_REPORTS_TABLE_COLUMN)

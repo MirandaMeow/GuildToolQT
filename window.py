@@ -9,7 +9,8 @@ import Parts
 _WINDOW_SIZE = {
     0: [800, 500],
     1: [1200, 900],
-    2: [1310, 900]
+    2: [1310, 900],
+    3: [1200, 900]
 }
 
 
@@ -85,6 +86,14 @@ class Window(QMainWindow):
         self.__layout_battle_reports.setRowStretch(0, 3)
         self.__layout_battle_reports.setRowStretch(1, 1)
         self.__layout_battle_reports.setRowStretch(2, 1)
+
+        # 选项卡 - 成员详情
+        self.__tab_member_detail = QtWidgets.QWidget()
+        self.__tab.addTab(self.__tab_member_detail, "成员详情")
+
+        self.__horizontal_layout_member_detail = QtWidgets.QHBoxLayout(self.__tab_member_detail)
+        self.__layout_member_detail = QtWidgets.QGridLayout()
+        self.__horizontal_layout_member_detail.addLayout(self.__layout_member_detail)
 
         # 菜单栏
         self.__menubar = QtWidgets.QMenuBar(self)
