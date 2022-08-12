@@ -28,7 +28,3 @@ class Core:
 
     def download_icons(self):
         ...
-
-
-if __name__ == "__main__":
-    c = Core()
