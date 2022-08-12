@@ -19,6 +19,9 @@
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
     <widget class="QTableWidget" name="table_team">
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
      <row>
       <property name="text">
        <string>名称</string>

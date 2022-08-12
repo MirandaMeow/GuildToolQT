@@ -96,6 +96,7 @@ class Miss(QGroupBox):
         self.__layout.addWidget(self.__lcd, 0, 4, 1, 1)
 
         self.__table_miss = QtWidgets.QTableWidget(self)
+        self.__table_miss.setAlternatingRowColors(True)
         self.__table_miss.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
         self.__table_miss.setRowCount(30)
         self.__table_miss.setColumnCount(5)
@@ -120,10 +121,9 @@ class Miss(QGroupBox):
 
         :param date_range: 日期范围
         """
-        min_date = date_range[0].split("-")
-        max_date = date_range[-1].split("-")
-        self.__date.setMinimumDate(QDate(int(min_date[0]), int(min_date[1]), int(min_date[2])))
-        self.__date.setMaximumDate(QDate(int(max_date[0]), int(max_date[1]), int(max_date[2])))
+
+        self.__date.setMinimumDate(QDate().fromString(date_range[0], "yyyy-MM-dd"))
+        self.__date.setMaximumDate(QDate().fromString(date_range[-1], "yyyy-MM-dd"))
 
     # TODO: 添加更新控件的方法
     def update_data(self, data):
@@ -149,6 +149,7 @@ class Team(QGroupBox):
         self.__horizontalLayout = QtWidgets.QHBoxLayout(self)
         self.__table_team = QtWidgets.QTableWidget(self)
         self.__horizontalLayout.addWidget(self.__table_team)
+        self.__table_team.setAlternatingRowColors(True)
         self.__table_team.setColumnCount(3)
         self.__table_team.setRowCount(14)
         self.__table_team.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
@@ -185,6 +186,7 @@ class Stats(QGroupBox):
         self.__horizontal_layout = QtWidgets.QHBoxLayout(self)
         self.__table_stats = QtWidgets.QTableWidget(self)
         self.__horizontal_layout.addWidget(self.__table_stats)
+        self.__table_stats.setAlternatingRowColors(True)
         self.__table_stats.setRowCount(30)
         self.__table_stats.setColumnCount(7)
         self.__table_stats.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
@@ -214,6 +216,7 @@ class Boss(QGroupBox):
         self.__horizontal_layout = QtWidgets.QHBoxLayout(self)
         self.__table_boss = QtWidgets.QTableWidget(self)
         self.__horizontal_layout.addWidget(self.__table_boss)
+        self.__table_boss.setAlternatingRowColors(True)
         self.__table_boss.setRowCount(30)
         self.__table_boss.setColumnCount(9)
         self.__table_boss.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
@@ -404,6 +407,7 @@ class BattleReports(QGroupBox):
         self.__table_battle_reports.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
         self.__table_battle_reports.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
         self.__table_battle_reports.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
+        self.__table_battle_reports.setAlternatingRowColors(True)
         self.__table_battle_reports.setRowCount(1350)
         self.__table_battle_reports.setColumnCount(8)
         self.__horizontal_layout.addWidget(self.__table_battle_reports)
@@ -556,71 +560,74 @@ class BattleDetail(QGroupBox):
         self.__table_detail.setFixedHeight(146)
         self.__table_detail.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
         self.__layout.addWidget(self.__table_detail)
+        self.__table_detail.setAlternatingRowColors(True)
         self.__table_detail.setColumnCount(4)
         self.__table_detail.setRowCount(4)
         _init_table(self.__table_detail, _BATTLE_DETAIL_TABLE_COLUMN)
 
-    class MemberDetail(QGroupBox):
-        def __init__(self, parent):
-            super().__init__(parent)
-            self.setTitle("成员概览")
 
-            self.__horizontal_layout = QtWidgets.QHBoxLayout(self)
-            self.__layout = QtWidgets.QVBoxLayout()
-            self.__horizontal_layout.addLayout(self.__layout)
+class MemberDetail(QGroupBox):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.setTitle("成员概览")
 
-            self.__grid_layout = QtWidgets.QGridLayout()
-            self.__layout.addLayout(self.__grid_layout)
+        self.__horizontal_layout = QtWidgets.QHBoxLayout(self)
+        self.__layout = QtWidgets.QVBoxLayout()
+        self.__horizontal_layout.addLayout(self.__layout)
 
-            self.__label_player = QtWidgets.QLabel(self)
-            self.__label_player.setText("玩家：")
-            self.__grid_layout.addWidget(self.__label_player, 0, 0, 1, 1)
+        self.__grid_layout = QtWidgets.QGridLayout()
+        self.__layout.addLayout(self.__grid_layout)
 
-            self.__combobox_player = QtWidgets.QComboBox(self)
-            self.__grid_layout.addWidget(self.__combobox_player, 0, 1, 1, 1)
+        self.__label_player = QtWidgets.QLabel(self)
+        self.__label_player.setText("玩家：")
+        self.__grid_layout.addWidget(self.__label_player, 0, 0, 1, 1)
 
-            self.__label_attack_detail_show = QtWidgets.QLabel(self)
-            self.__label_attack_detail_show.setText("出刀/缺刀/尾刀：")
-            self.__grid_layout.addWidget(self.__label_attack_detail_show, 0, 2, 1, 1)
+        self.__combobox_player = QtWidgets.QComboBox(self)
+        self.__grid_layout.addWidget(self.__combobox_player, 0, 1, 1, 1)
 
-            self.__label_attack_detail = QtWidgets.QLabel(self)
-            self.__label_attack_detail.setText("42/0/5")
-            self.__grid_layout.addWidget(self.__label_attack_detail, 0, 3, 1, 1)
+        self.__label_attack_detail_show = QtWidgets.QLabel(self)
+        self.__label_attack_detail_show.setText("出刀/缺刀/尾刀：")
+        self.__grid_layout.addWidget(self.__label_attack_detail_show, 0, 2, 1, 1)
 
-            self.label_2 = QtWidgets.QLabel(self)
-            self.label_2.setText("总伤：")
-            self.__grid_layout.addWidget(self.label_2, 1, 0, 1, 1)
+        self.__label_attack_detail = QtWidgets.QLabel(self)
+        self.__label_attack_detail.setText("42/0/5")
+        self.__grid_layout.addWidget(self.__label_attack_detail, 0, 3, 1, 1)
 
-            self.label_4 = QtWidgets.QLabel(self)
-            self.label_4.setNum(0)
-            self.__grid_layout.addWidget(self.label_4, 1, 1, 1, 1)
+        self.label_2 = QtWidgets.QLabel(self)
+        self.label_2.setText("总伤：")
+        self.__grid_layout.addWidget(self.label_2, 1, 0, 1, 1)
 
-            self.label_8 = QtWidgets.QLabel(self)
-            self.label_8.setText("除首日总伤：")
-            self.__grid_layout.addWidget(self.label_8, 1, 2, 1, 1)
+        self.label_4 = QtWidgets.QLabel(self)
+        self.label_4.setNum(0)
+        self.__grid_layout.addWidget(self.label_4, 1, 1, 1, 1)
 
-            self.label_6 = QtWidgets.QLabel(self)
-            self.label_6.setText("0")
-            self.__grid_layout.addWidget(self.label_6, 1, 3, 1, 1)
+        self.label_8 = QtWidgets.QLabel(self)
+        self.label_8.setText("除首日总伤：")
+        self.__grid_layout.addWidget(self.label_8, 1, 2, 1, 1)
 
-            self.label_3 = QtWidgets.QLabel(self)
-            self.label_3.setText("均伤：")
-            self.__grid_layout.addWidget(self.label_3, 2, 0, 1, 1)
+        self.label_6 = QtWidgets.QLabel(self)
+        self.label_6.setText("0")
+        self.__grid_layout.addWidget(self.label_6, 1, 3, 1, 1)
 
-            self.label_5 = QtWidgets.QLabel(self)
-            self.label_5.setText("0")
-            self.__grid_layout.addWidget(self.label_5, 2, 1, 1, 1)
+        self.label_3 = QtWidgets.QLabel(self)
+        self.label_3.setText("均伤：")
+        self.__grid_layout.addWidget(self.label_3, 2, 0, 1, 1)
 
-            self.label_9 = QtWidgets.QLabel(self)
-            self.label_9.setText("除首日均伤：")
-            self.__grid_layout.addWidget(self.label_9, 2, 2, 1, 1)
+        self.label_5 = QtWidgets.QLabel(self)
+        self.label_5.setText("0")
+        self.__grid_layout.addWidget(self.label_5, 2, 1, 1, 1)
 
-            self.label_7 = QtWidgets.QLabel(self)
-            self.label_7.setText("0")
-            self.__grid_layout.addWidget(self.label_7, 2, 3, 1, 1)
+        self.label_9 = QtWidgets.QLabel(self)
+        self.label_9.setText("除首日均伤：")
+        self.__grid_layout.addWidget(self.label_9, 2, 2, 1, 1)
 
-            self.__table_battle_reports = QtWidgets.QTableWidget(self)
-            self.__layout.addWidget(self.__table_battle_reports)
-            self.__table_battle_reports.setColumnCount(5)
-            self.__table_battle_reports.setRowCount(0)
-            _init_table(self.__table_battle_reports, _MEMBER_BATTLE_REPORTS_TABLE_COLUMN)
+        self.label_7 = QtWidgets.QLabel(self)
+        self.label_7.setText("0")
+        self.__grid_layout.addWidget(self.label_7, 2, 3, 1, 1)
+
+        self.__table_battle_reports = QtWidgets.QTableWidget(self)
+        self.__layout.addWidget(self.__table_battle_reports)
+        self.__table_battle_reports.setAlternatingRowColors(True)
+        self.__table_battle_reports.setColumnCount(5)
+        self.__table_battle_reports.setRowCount(0)
+        _init_table(self.__table_battle_reports, _MEMBER_BATTLE_REPORTS_TABLE_COLUMN)
