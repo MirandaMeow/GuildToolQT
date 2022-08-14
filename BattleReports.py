@@ -7,14 +7,28 @@ import Settings
 
 
 class BattleReports:
-    def __init__(self, data: dict, rename: dict):
+    def __init__(self, database: Misc.Database):
         self.date_list = []
         self.members = []
         self.boss = {}
         self.char_icons = {}
+        self.__data = None
+        self.valid = False
+        self.__start_end = ""
+        self.__boss_state = None
+        self.__battle_reports_for_save = []
+        self.__battle_reports = []
+        self.count_battle_report = 0
+        self.daily_hits = {}
+        self.__database = database
+
+    def save(self):
+        self.__database.add_data("GuildWarData", [self.__start_end, str(self.__battle_reports_for_save)])
+
+    def set(self, data: dict, rename: dict):
         self.__data = data
         self.valid = self.__data["code"] == 0
-        self.__battle_reports: list = copy.deepcopy(self.__data["data"])
+        self.__battle_reports = copy.deepcopy(self.__data["data"])
         self.__battle_reports.reverse()
         start_date = QtCore.QDateTime.fromSecsSinceEpoch(self.__battle_reports[0]["log_time"]).toString("yyyy-MM-dd")
         end_date = QtCore.QDate.fromString(start_date, "yyyy-MM-dd").addDays(14).toString("yyyy-MM-dd")
@@ -32,15 +46,14 @@ class BattleReports:
                 self.members.append(current_player)
             if current_boss_name not in self.boss:
                 self.boss[current_boss_name] = current_boss_elemental
-            for current_role in current["role_list"]:
-                char_icon_name = current_role["icon"].split("/")[-1]
+            for current_role_list in current["role_list"]:
+                char_icon_name = current_role_list["icon"].split("/")[-1]
                 if char_icon_name not in self.char_icons:
-                    self.char_icons[char_icon_name] = current_role["icon"]
+                    self.char_icons[char_icon_name] = current_role_list["icon"]
 
         # 在战斗记录中补齐轮数和 Boss 状态
         self.__boss_state = Misc.BossState(self.boss)
         missed_index = 0
-        self.__battle_reports_for_save = []
         for current in self.__battle_reports:
             current_boss_name = current["boss"]["name"]
             current_damage = current["damage"]
@@ -57,13 +70,12 @@ class BattleReports:
                 new_battle_report["user_name"] = f"- 数据缺失 #{missed_index} -"
                 new_battle_report["boss"]["name"] = missed_boss
                 new_battle_report["boss"]["elemental_type_cn"] = self.boss[missed_boss]
-                new_battle_report["boss"]["round"] = self.__boss_state.get_round(missed_damage)
-                new_battle_report["boss"]["level"] = self.__boss_state.get_level(missed_damage)
+                new_battle_report["boss"]["round"] = self.__boss_state.get_round(missed_boss)
+                new_battle_report["boss"]["level"] = self.__boss_state.get_level(missed_boss)
                 new_battle_report["boss"]["remain"] = 0
                 new_battle_report["damage"] = missed_damage
                 self.__boss_state.hit(missed_boss, missed_damage)
                 new_battle_report["boss"]["state"] = self.__boss_state.get_all()
-
                 current["boss"]["remain"] = self.__boss_state.get_boss_max_health(current_boss_name) - current_damage
                 current["boss"]["round"] = self.__boss_state.get_round(current_boss_name)
                 current["boss"]["level"] = self.__boss_state.get_level(current_boss_name)
@@ -72,7 +84,6 @@ class BattleReports:
             current["boss"]["state"] = self.__boss_state.get_all()
             self.__battle_reports_for_save.append(current)
         self.__battle_reports = self.__battle_reports_for_save
-
         self.count_battle_report = len(self.__battle_reports)
 
         # 应用重命名
@@ -81,7 +92,64 @@ class BattleReports:
             if current_player in rename:
                 current["user_name"] = rename[current_player]
 
-    def save(self, database: Misc.Database):
-        database.add_data("GuildWarData", [self.__start_end, str(self.__battle_reports_for_save)])
+    def __get_team_and_elemental(self, role_list: list):
+        weight_ = {"土": 0, "火": 0, "水": 0, "光": 0, "暗": 0, "虚": 0}
+        weight_first = True
+        team = []
+        for i in role_list:
+            team.append(i["icon"].split("/")[-1])
+            current_elemental = self.__get_character_elemental(i["icon"].split("/")[-1])
+            if current_elemental == "-":
+                return "缺失"
+            if weight_first:
+                weight_[current_elemental] += 1.5
+                weight_first = False
+            else:
+                weight_[current_elemental] += 1
+        return sorted(weight_.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)[0][0] + "属性", team
 
-    # TODO: 生成各个报表数据的方法
+    def __get_character_elemental(self, char):
+        temp_result = self.__database.get_data("CharacterData", {"Character": ["=", char]})
+        return temp_result[0][2]
+
+    def get_daily_hits(self):
+        if self.daily_hits != {}:
+            return self.daily_hits
+        for date in self.date_list:
+            self.daily_hits[date] = {}
+        for current in self.__battle_reports:
+            qdate = QtCore.QDateTime.fromSecsSinceEpoch(current["log_time"])
+            current_date = qdate.toString("yyyy-MM-dd")
+            current_datetime = qdate.toString("yyyy-MM-dd hh:mm:ss")
+            current_player = current["user_name"]
+            current_damage = current["damage"]
+            current_boss_round = current["boss"]["round"]
+            current_boss_name = current["boss"]["name"]
+            current_boss_level = current["boss"]["level"]
+            current_boss_elemental = current["boss"]["elemental_type_cn"]
+            current_role_list = current["role_list"]
+            current_boss = {"round": current_boss_round,
+                            "level": current_boss_level,
+                            "name": current_boss_name,
+                            "elemental": current_boss_elemental}
+            team_and_elemental = self.__get_team_and_elemental(current_role_list)
+
+            temp_attack_data = {
+                "time": current_datetime,
+                "damage": current_damage,
+                "boss": current_boss,
+                "team_elemental": team_and_elemental[0],
+                "team": team_and_elemental[1]
+            }
+            if current_player not in self.daily_hits[current_date]:
+                self.daily_hits[current_date][current_player] = {"attack": []}
+            self.daily_hits[current_date][current_player]["attack"].append(temp_attack_data)
+        for current_date, current_data in self.daily_hits.items():
+            for current_player, current_player_data in current_data.items():
+                total_damage = 0
+                total_hit = 0
+                for current_attack in current_player_data["attack"]:
+                    total_damage += current_attack["damage"]
+                    total_hit += 1
+                current_player_data["total_damage"] = total_damage
+                current_player_data["total_count"] = total_hit

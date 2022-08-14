@@ -102,7 +102,7 @@ class Database:
         else:
             where_string = ""
             for k, v in where.items():
-                where_string += f"{k}{v[0]}{v[1]} AND "
+                where_string += f"{k}{v[0]}'{v[1]}' AND "
             where_string = where_string[:-5]
             query.prepare(f"SELECT * FROM {table_name} WHERE {where_string}")
         query.exec()

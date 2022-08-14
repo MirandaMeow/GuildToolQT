@@ -1,6 +1,7 @@
 from PyQt6 import QtWidgets, QtGui
 from PyQt6.QtWidgets import QMainWindow
 
+import Core
 import Parts
 
 # TODO: 微调窗口大小
@@ -15,6 +16,7 @@ _WINDOW_SIZE = {
 class Window(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.__core = Core.Core()
         self.setWindowTitle("会战统计工具")
         self.setGeometry(100, 100, 100, 100)
         self.setWindowIcon(QtGui.QIcon("icon.ico"))

@@ -526,7 +526,6 @@ class BossRemain(QGroupBox):
 
         self.__layout_boss4.setRowStretch(0, 1)
         self.__layout_boss4.setRowStretch(1, 3)
-        # self.__bar_boss4.clear()
 
 
 class BattleDetail(QGroupBox):

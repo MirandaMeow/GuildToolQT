@@ -10,6 +10,7 @@ class Core:
         self.__history = Misc.History(self.__database)
         self.__rename = Misc.Rename(self.__database)
         self.__blacklist = Misc.Blacklist(self.__database)
+        self.__battle_reports = BattleReports(self.__database)
         self.__session_api = "rstikt0k4sif8536phuusk0ak8"
         self.__headers = {"Cookie": "session-api=" + self.__session_api,
                           "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, "
@@ -20,10 +21,11 @@ class Core:
 
     def __get_battle_reports(self):
         response = requests.get(url=self.__battle_report_url, headers=self.__headers).json()
-        self.__battle_reports = BattleReports(response, self.__rename.rename)
+        self.__battle_reports.set(response, self.__rename.rename)
+        self.__battle_reports.get_daily_hits()
 
     def save_battle_reports(self):
-        self.__battle_reports.save(self.__database)
+        self.__battle_reports.save()
         self.__history.update()
 
     def download_icons(self):
