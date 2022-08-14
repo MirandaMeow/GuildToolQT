@@ -24,10 +24,7 @@ class Database:
         :param table_name: 表名称
         :param columns: 列属性
         """
-        column_string = ""
-        for i in columns:
-            column_string += i + ","
-        column_string = column_string[:-1]
+        column_string = ", ".join(columns)
         self.__database.exec(f"CREATE TABLE {table_name} ({column_string})")
         self.__database.lastError().text()
 
@@ -61,10 +58,10 @@ class Database:
         :param where: 删除条件
         """
         query = QtSql.QSqlQuery(self.__database)
-        where_string = ""
+        where_string_list = []
         for k, v in where.items():
-            where_string += f"{k}{v[0]}'{v[1]}' AND "
-        where_string = where_string[:-5]
+            where_string_list.append(f"{k}{v[0]}'{v[1]}'")
+        where_string = " AND ".join(where_string_list)
         query.prepare(f"DELETE FROM {table_name} WHERE {where_string}")
         query.exec()
 
@@ -77,10 +74,10 @@ class Database:
         :param where: 修改位置
         """
         query = QtSql.QSqlQuery(self.__database)
-        modify_data = ""
+        modify_data_list = []
         for k, v in modified_data.items():
-            modify_data += f"{k}='{v}', "
-        modify_data = modify_data[:-2]
+            modify_data_list.append(f"{k}='{v}'")
+        modify_data = ", ".join(modify_data_list)
         where_string = ""
         for k, v in where.items():
             where_string += f"{k}{v[0]}{v[1]} AND "
@@ -100,10 +97,10 @@ class Database:
         if where is None:
             query.prepare(f"SELECT * FROM {table_name}")
         else:
-            where_string = ""
+            where_string_list = []
             for k, v in where.items():
-                where_string += f"{k}{v[0]}'{v[1]}' AND "
-            where_string = where_string[:-5]
+                where_string_list.append(f"{k}{v[0]}'{v[1]}'")
+            where_string = " AND ".join(where_string_list)
             query.prepare(f"SELECT * FROM {table_name} WHERE {where_string}")
         query.exec()
         out = []
@@ -123,10 +120,10 @@ class Database:
         :return: 数据是否存在
         """
         query = QtSql.QSqlQuery(self.__database)
-        where_string = ""
+        where_string_list = []
         for k, v in where.items():
-            where_string += f"{k}{v[0]}{v[1]} AND "
-        where_string = where_string[:-5]
+            where_string_list.append(f"{k}{v[0]}'{v[1]}'")
+        where_string = " AND ".join(where_string_list)
         query.prepare(f"SELECT * FROM {table_name} WHERE {where_string}")
         query.exec()
         return query.next()

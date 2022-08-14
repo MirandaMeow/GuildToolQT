@@ -8,6 +8,11 @@ import Settings
 
 class BattleReports:
     def __init__(self, database: Misc.Database):
+        """
+        战斗记录
+
+        :param database: 将要被操作的数据库
+        """
         self.date_list = []
         self.members = []
         self.boss = {}
@@ -23,9 +28,18 @@ class BattleReports:
         self.__database = database
 
     def save(self):
+        """
+        保存战斗记录至数据库
+        """
         self.__database.add_data("GuildWarData", [self.__start_end, str(self.__battle_reports_for_save)])
 
-    def set(self, data: dict, rename: dict):
+    def analyse(self, data: dict, rename: dict):
+        """
+        处理战斗记录并应用重命名
+
+        :param data: 战斗记录
+        :param rename: 重命名
+        """
         self.__data = data
         self.valid = self.__data["code"] == 0
         self.__battle_reports = copy.deepcopy(self.__data["data"])
@@ -91,28 +105,47 @@ class BattleReports:
             current_player = str(current["user_name"])
             if current_player in rename:
                 current["user_name"] = rename[current_player]
+        self.__get_daily_hits()
 
-    def __get_team_and_elemental(self, role_list: list):
+    def __get_team_and_elemental(self, role_list: list) -> tuple[str, list]:
+        """
+        获取队伍成员和根据队伍计算出队伍的属性
+
+        :param role_list: 将要被计算的队伍
+        :return: [队伍属性, 队伍成员]
+        """
         weight_ = {"土": 0, "火": 0, "水": 0, "光": 0, "暗": 0, "虚": 0}
         weight_first = True
         team = []
+        missed = False
         for i in role_list:
             team.append(i["icon"].split("/")[-1])
             current_elemental = self.__get_character_elemental(i["icon"].split("/")[-1])
             if current_elemental == "-":
-                return "缺失"
+                missed = True
+                break
             if weight_first:
                 weight_[current_elemental] += 1.5
                 weight_first = False
             else:
                 weight_[current_elemental] += 1
-        return sorted(weight_.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)[0][0] + "属性", team
+        if missed:
+            elemental = "缺失"
+        else:
+            elemental = sorted(weight_.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)[0][0] + "属性"
+        return elemental, team
 
     def __get_character_elemental(self, char):
+        """
+        获取角色属性
+
+        :param char: 角色
+        :return: 角色的属性
+        """
         temp_result = self.__database.get_data("CharacterData", {"Character": ["=", char]})
         return temp_result[0][2]
 
-    def get_daily_hits(self):
+    def __get_daily_hits(self):
         if self.daily_hits != {}:
             return self.daily_hits
         for date in self.date_list:
