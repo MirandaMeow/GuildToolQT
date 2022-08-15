@@ -22,6 +22,7 @@ class Core:
     def __get_battle_reports(self):
         response = requests.get(url=self.__battle_report_url, headers=self.__headers).json()
         self.__battle_reports.analyse(response, self.__rename.rename)
+        self.__battle_reports.calc_for_tables()
 
     def save_battle_reports(self):
         self.__battle_reports.save()

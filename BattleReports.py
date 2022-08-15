@@ -25,6 +25,9 @@ class BattleReports:
         self.__battle_reports = []
         self.count_battle_report = 0
         self.daily_hits = {}
+        self.table_attacks = {}
+        self.table_stats = {}
+        self.table_bosses = {}
         self.__database = database
 
     def save(self):
@@ -107,47 +110,10 @@ class BattleReports:
                 current["user_name"] = rename[current_player]
         self.__get_daily_hits()
 
-    def __get_team_and_elemental(self, role_list: list) -> tuple[str, list]:
-        """
-        获取队伍成员和根据队伍计算出队伍的属性
-
-        :param role_list: 将要被计算的队伍
-        :return: [队伍属性, 队伍成员]
-        """
-        weight_ = {"土": 0, "火": 0, "水": 0, "光": 0, "暗": 0, "虚": 0}
-        weight_first = True
-        team = []
-        missed = False
-        for i in role_list:
-            team.append(i["icon"].split("/")[-1])
-            current_elemental = self.__get_character_elemental(i["icon"].split("/")[-1])
-            if current_elemental == "-":
-                missed = True
-                break
-            if weight_first:
-                weight_[current_elemental] += 1.5
-                weight_first = False
-            else:
-                weight_[current_elemental] += 1
-        if missed:
-            elemental = "缺失"
-        else:
-            elemental = sorted(weight_.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)[0][0] + "属性"
-        return elemental, team
-
-    def __get_character_elemental(self, char):
-        """
-        获取角色属性
-
-        :param char: 角色
-        :return: 角色的属性
-        """
-        temp_result = self.__database.get_data("CharacterData", {"Character": ["=", char]})
-        return temp_result[0][2]
-
     def __get_daily_hits(self):
-        if self.daily_hits != {}:
-            return self.daily_hits
+        """
+        整理出根据日期的成员出刀表
+        """
         for date in self.date_list:
             self.daily_hits[date] = {}
         for current in self.__battle_reports:
@@ -184,5 +150,86 @@ class BattleReports:
                 for current_attack in current_player_data["attack"]:
                     total_damage += current_attack["damage"]
                     total_hit += 1
-                current_player_data["total_damage"] = total_damage
-                current_player_data["total_count"] = total_hit
+                current_player_data["day_total_damage"] = total_damage
+                current_player_data["day_total_hit"] = total_hit
+
+    def __get_team_and_elemental(self, role_list: list) -> tuple[str, list]:
+        """
+        获取队伍成员和根据队伍计算出队伍的属性
+
+        :param role_list: 将要被计算的队伍
+        :return: [队伍属性, 队伍成员]
+        """
+        weight_ = {"土": 0, "火": 0, "水": 0, "光": 0, "暗": 0, "虚": 0}
+        weight_first = True
+        team = []
+        missed = False
+        for i in role_list:
+            team.append(i["icon"].split("/")[-1])
+            current_elemental = self.__get_character_elemental(i["icon"].split("/")[-1])
+            if current_elemental == "-":
+                missed = True
+                break
+            if weight_first:
+                weight_[current_elemental] += 1.5
+                weight_first = False
+            else:
+                weight_[current_elemental] += 1
+        if missed:
+            elemental = "缺失"
+        else:
+            elemental = sorted(weight_.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)[0][0] + "属性"
+        return elemental, team
+
+    def __get_character_elemental(self, char) -> str:
+        """
+        获取角色属性
+
+        :param char: 角色
+        :return: 角色的属性
+        """
+        temp_result = self.__database.get_data("CharacterData", {"Character": ["=", char]})
+        return temp_result[0][2]
+
+    def calc_for_tables(self):
+        for current_date, values in self.daily_hits.items():
+            day_total_damage = 0
+            day_total_hit = 0
+            elementals = {}
+            bosses = {}
+            if current_date not in self.table_attacks:
+                self.table_attacks[current_date] = {"attack": {}, "show": {}}
+            for current_player, player_data in values.items():
+                if current_player not in self.table_stats:
+                    self.table_stats[current_player] = {"total_damage": 0, "total_hit": 0}
+                if current_player not in self.table_bosses:
+                    temp = {}
+                    for boss in self.boss:
+                        temp[boss] = {"total_damage": 0, "total_hit": 0}
+                    self.table_bosses[current_player] = temp
+                self.table_attacks[current_date]["attack"][current_player] = {
+                    "day_total_damage": player_data["day_total_damage"],
+                    "day_total_hit": player_data["day_total_hit"]
+                }
+                day_total_damage += player_data["day_total_damage"]
+                day_total_hit += player_data["day_total_hit"]
+                self.table_stats[current_player]["total_damage"] += player_data["day_total_damage"]
+                self.table_stats[current_player]["total_hit"] += player_data["day_total_hit"]
+                for i in player_data["attack"]:
+                    self.table_bosses[current_player][i["boss"]["name"]]["total_damage"] += i["damage"]
+                    self.table_bosses[current_player][i["boss"]["name"]]["total_hit"] += 1
+                    team_elemental = i["team_elemental"]
+                    if team_elemental not in elementals:
+                        elementals[team_elemental] = 0
+                    elementals[team_elemental] += 1
+                    current_boss = i["boss"]["name"]
+                    if current_boss not in bosses:
+                        bosses[current_boss] = 0
+                    bosses[current_boss] += 1
+            self.table_attacks[current_date]["show"]["day_total_damage"] = day_total_damage
+            self.table_attacks[current_date]["show"]["day_total_hit"] = day_total_hit
+            elementals = sorted(elementals.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)
+            bosses = sorted(bosses.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)
+            self.table_attacks[current_date]["show"]["elementals"] = elementals
+            self.table_attacks[current_date]["show"]["bosses"] = bosses
+            # TODO:伤害占比 汇总统计
